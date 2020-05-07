@@ -9,11 +9,10 @@ def push_msg():
     myTeamsMessage = pymsteams.connectorcard(WEBHOOK_URL)
 
     # Add text to the message.
-    myTeamsMessage.text("this is my test AA")
+    myTeamsMessage.text("this is a test from NXLOG")
 
     # send the message.
     myTeamsMessage.send()
-
 
 if __name__ == "__main__":
     push_msg()
