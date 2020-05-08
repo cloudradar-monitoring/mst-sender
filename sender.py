@@ -15,8 +15,8 @@ def push_msg(args):
     print("webhook_url: " + webhook_url)
 
     host_name = socket.gethostname()
-    now = datetime.now()
-    now_strf = now.strftime("%d/%m/%Y %H:%M:%S")
+    now = datetime.utcnow()
+    now_strf = now.strftime("%d/%m/%Y %H:%M:%S") + " UTC"
 
     if args.log_level == "ERROR":
         hex_colour = "c61100"
