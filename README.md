@@ -20,8 +20,7 @@ define ACTION_WARNING { log_info("warning found:"); log_info($raw_event); drop()
 				exec_async("C:\\Python36\\python.exe", "D:\\mst-sender\\sender.py", "--log_level", "ERROR", "--message", $raw_event);
 				%ACTION_ERROR%
         }
-		
-		if $raw_event =~ /(\S+)\ (.+) \[WARNING (.+)/
+        if $raw_event =~ /(\S+)\ (.+) \[WARNING (.+)/
 		{
 				exec_async("C:\\Python36\\python.exe", "D:\\mst-sender\\sender.py", "--log_level", "WARNING", "--message", $raw_event);
 				%ACTION_WARNING%
@@ -53,9 +52,13 @@ Note: `ACTION_ERROR` and `ACTION_WARNING` are defined and used only for debuggin
 ### `sender_basic.py` 
 We could at any time switch over to a basic sender but the Python Wrapper Library to send requests to Microsoft Teams Webhooks called pymsteams would need to be used
 <br>
-[pymsteams](https://pypi.org/project/pymsteams/)
 
 #### Install 
 ```bash
 pip install -r requirements.txt
 ```
+
+
+##### Useful links:
+* [send-message-cards-with-microsoft-teams/](https://www.lee-ford.co.uk/send-message-cards-with-microsoft-teams/)
+* [pymsteams](https://pypi.org/project/pymsteams/)
