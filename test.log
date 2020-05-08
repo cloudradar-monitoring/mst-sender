@@ -16,7 +16,12 @@
 04/Apr/2020:20:55:33 +0000 [ERROR 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 6 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96
 04/Apr/2020:20:55:33 +0000 [ERROR 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 6 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96
 04/Apr/2020:20:55:33 +0000 [ERROR 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 6 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96
-
+04/Apr/2020:20:55:33 +0000 [ERROR 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 6 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96
+04/Apr/2020:20:55:33 +0000 [ERROR 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 6 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96
+04/Apr/2020:20:55:33 +0000 [ERROR 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 6 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96
+04/Apr/2020:20:55:33 +0000 [ERROR 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 6 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96
+04/Apr/2020:20:55:33 +0000 [ERROR 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 6 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96
+04/Apr/2020:20:55:33 +0000 [WARNING 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 6 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96
 
 
 
