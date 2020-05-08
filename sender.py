@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-import pymsteams
 import sys
 import argparse
 import socket
@@ -8,11 +7,12 @@ from datetime import datetime
 import requests
 
 
-WEBHOOK_URL = "https://outlook.office.com/webhook/ff7a3383-c45e-4c7b-b7e1-2fdfd3e74e1b@c5f4d5ac-668c-41fc" \
-                  "-b829-8c33e71aca58/IncomingWebhook/a02e939cba9b4de1bdcfa4f457f38135/249b239f-f979-4a2a-82db-2eeb7e36a241"
-
-
 def push_msg(args):
+
+    with open("webhookurl.conf", "r") as fh:
+        webhook_url = fh.read()
+
+    print("webhook_url: " + webhook_url)
 
     host_name = socket.gethostname()
     now = datetime.now()
@@ -45,7 +45,7 @@ def push_msg(args):
         }
     ]
     }
-    requests.post(url=WEBHOOK_URL, json=json_payload)
+    requests.post(url=webhook_url, json=json_payload)
 
 
 if __name__ == "__main__":
