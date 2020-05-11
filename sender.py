@@ -6,13 +6,17 @@ import socket
 from datetime import datetime
 import requests
 import os
+from ConfigParser import SafeConfigParser
 
 
 def push_msg(args):
 
-    with open(os.path.join(os.getcwd(), "mst-sender.conf"), "r") as fh:
-        webhook_url = fh.read()
+    parser = SafeConfigParser()
 
+    with open(os.path.join(os.getcwd(), "mst-sender.cfg"), "r") as fh:
+        parser.readfp(fh)
+
+    webhook_url = parser.get('default', 'webhook_url')
     print("webhook_url: " + webhook_url)
 
     host_name = socket.gethostname()

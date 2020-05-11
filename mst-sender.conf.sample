@@ -1,1 +1,2 @@
-https://outlook.office.com/webhook/SAMPLE_URL
+[default]
+webhook_url =

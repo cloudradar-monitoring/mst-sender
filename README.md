@@ -14,7 +14,7 @@
 
 <Input in>
     Module  im_file
-    File    "D:\\mst-sender\\test.log"
+    File    "D:\\mst-sender\\log\\test.log"
         <Exec>
         if $raw_event =~ /(\S+)\ (.+) \[ERROR (.+)/
         {
@@ -38,7 +38,7 @@
 where:
 ```
 * C:\\Python36\\python.exe is your  path to your python installation
-* D:\\mst-sender\\test.log is your log file being monitored by nxlog
+* D:\\mst-sender\\test\\test.log is your log file being monitored by nxlog
 * D:\\mst-sender\\sender.py is the path to `sender.py`
 ```
 
