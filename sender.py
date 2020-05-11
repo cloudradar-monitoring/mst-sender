@@ -5,11 +5,12 @@ import argparse
 import socket
 from datetime import datetime
 import requests
+import os
 
 
 def push_msg(args):
 
-    with open("mst-sender.conf", "r") as fh:
+    with open(os.path.join(os.getcwd(), "mst-sender.conf"), "r") as fh:
         webhook_url = fh.read()
 
     print("webhook_url: " + webhook_url)
