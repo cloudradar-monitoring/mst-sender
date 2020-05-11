@@ -45,7 +45,8 @@ def push_msg(args):
         }
     ]
     }
-    requests.post(url=webhook_url, json=json_payload)
+    r = requests.post(url=webhook_url, json=json_payload)
+    print(r.status_code)
 
 
 if __name__ == "__main__":

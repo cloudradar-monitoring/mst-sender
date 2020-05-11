@@ -45,6 +45,7 @@ where:
 * Restart `nxlog` service
 
 # Linux (Ubuntu)
+* Install python requests `sudo apt-get install -y python-requests.`
 * Download nxlog (download)[https://nxlog.co/products/nxlog-community-edition/download]
 * Transfer the file to the target server scp or a similar secure method 
 * Install nxlog packadges ie. `sudo dpkg -i nxlog-ce_2.10.2150_ubuntu_xenial_amd64.deb` [Installation](https://nxlog.co/documentation/nxlog-user-guide/deploy_debian.html)
@@ -60,7 +61,7 @@ where:
 
 <Input in>
     Module  im_file
-    File    "D:\\mst-sender\\test.log"
+    File    "/etc/nxlog/test.log"
         <Exec>
         if $raw_event =~ /(\S+)\ (.+) \[ERROR (.+)/
         {
@@ -81,6 +82,8 @@ where:
     Path    in => out1
 </Route>
 ```
+
+* restart nxlog `sudo systemctl restart nxlog`
 
 #### nxlog config file 
 
