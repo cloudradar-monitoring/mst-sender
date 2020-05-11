@@ -2,8 +2,8 @@
 
 * Download and install nxlog-ce (or Enterprise edition) [download](https://nxlog.co/products/nxlog-community-edition/download)
 * Have a Python installed
-* Clone this repo or download `sender.py` which is used to push notification to MS Teams
-* Rename `mst-sender.conf.sample` to `mst-sender.conf` and paste your MS Teams Web Hook Url in it
+* Clone this repo or download `mst-sender.py` which is used to push notification to MS Teams
+* Rename `mst-sender.cfg.sample` to `mst-sender.cfg` and paste your MS Teams Web Hook Url in it
 * Edit your nxlog configuration file found in `C:\Program Files (x86)\nxlog\conf` (or `C:\Program Files\nxlog\conf`) and add the following code:
 
 
@@ -18,11 +18,11 @@
         <Exec>
         if $raw_event =~ /(\S+)\ (.+) \[ERROR (.+)/
         {
-            exec_async("C:\\Python36\\python.exe", "D:\\mst-sender\\sender.py", "--log_level", "ERROR", "--message", $raw_event);
+            exec_async("C:\\Python36\\python.exe", "D:\\mst-sender\\mst-sender.py", "--log_level", "ERROR", "--message", $raw_event);
         }
         if $raw_event =~ /(\S+)\ (.+) \[WARNING (.+)/
         {
-            exec_async("C:\\Python36\\python.exe", "D:\\mst-sender\\sender.py", "--log_level", "WARNING", "--message", $raw_event);
+            exec_async("C:\\Python36\\python.exe", "D:\\mst-sender\\mst-sender.py", "--log_level", "WARNING", "--message", $raw_event);
         }
         </Exec>
 </Input>
@@ -37,9 +37,9 @@
 ```
 where:
 ```
-* C:\\Python36\\python.exe is your  path to your python installation
-* D:\\mst-sender\\test\\test.log is your log file being monitored by nxlog
-* D:\\mst-sender\\sender.py is the path to `sender.py`
+* C:\\Python36\\python.exe - path to your python installation
+* D:\\mst-sender\\test\\test.log - log file being monitored by nxlog
+* D:\\mst-sender\\mst-sender.py - path to `sender.py`
 ```
 
 * Restart `nxlog` service
@@ -48,10 +48,10 @@ where:
 * Install python requests `sudo apt-get install -y python-requests.`
 * Download nxlog (download)[https://nxlog.co/products/nxlog-community-edition/download]
 * Transfer the file to the target server scp or a similar secure method 
-* Install nxlog packadges ie. `sudo dpkg -i nxlog-ce_2.10.2150_ubuntu_xenial_amd64.deb` [Installation](https://nxlog.co/documentation/nxlog-user-guide/deploy_debian.html)
+* Install nxlog packadges ie. `sudo dpkg -i nxlog-ce_2.10.2150_ubuntu_xenial_amd64.deb` [nxlog installation manual](https://nxlog.co/documentation/nxlog-user-guide/deploy_debian.html)
 * Verify the installation works `nxlog -v`
-* Pull `sender.py` onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/sender.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender`
-* Pull the configuration file `mkdir /etc/mst-sender/` and `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.conf.sample -O /etc/mst-sender/mst-sender.conf`
+* Pull `sender.py` onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender`
+* Pull the configuration file `mkdir /etc/mst-sender/` and `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.cfg.sample -O /etc/mst-sender/mst-sender.cfg`
 * Edit `nxlog.conf` in `/etc/nxlog`
 
 ```bash

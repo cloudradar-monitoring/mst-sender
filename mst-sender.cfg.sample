@@ -1,0 +1,18 @@
+[default]
+webhook_url = https://outlook.office.com/webhook/TOKEN
+log_level = ERROR
+fact.Env = Staging
+fact.Project = Project Name
+
+[production]
+webhook_url =
+log_level = ERROR
+sender = My tiny Webserver
+fact.Env = Production
+
+[sample]
+webhook_url = web hook url (required)
+log_level = ERROR, WARNING or INFO (required, can be overridden by --log_level)
+sender = My tiny Webserver (optional, can be overridden by --sender, hostname is used as fallback)
+fact.Env = Staging (optional)
+fact.Project = Project Name
