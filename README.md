@@ -1,4 +1,86 @@
-# mst-sender `sender.py`
+# Windows 
+
+* Download and install nxlog-ce (or Enterprise edition) [download](https://nxlog.co/products/nxlog-community-edition/download)
+* Have a Python installed
+* Clone this repo or download `sender.py` which is used to push notification to MS Teams
+* Rename `mst-sender.conf.sample` to `mst-sender.conf` and paste your MS Teams Web Hook Url in it
+* Edit your nxlog configuration file found in `C:\Program Files (x86)\nxlog\conf` (or `C:\Program Files\nxlog\conf`) and add the following code:
+
+
+```bash
+<Extension _exec>
+    Module  xm_exec
+</Extension>
+
+<Input in>
+    Module  im_file
+    File    "D:\\mst-sender\\test.log"
+        <Exec>
+        if $raw_event =~ /(\S+)\ (.+) \[ERROR (.+)/
+        {
+            exec_async("C:\\Python36\\python.exe", "D:\\mst-sender\\sender.py", "--log_level", "ERROR", "--message", $raw_event);
+        }
+        if $raw_event =~ /(\S+)\ (.+) \[WARNING (.+)/
+        {
+            exec_async("C:\\Python36\\python.exe", "D:\\mst-sender\\sender.py", "--log_level", "WARNING", "--message", $raw_event);
+        }
+        </Exec>
+</Input>
+
+<Output out1>
+    Module  om_null
+</Output>
+
+<Route 1>
+    Path    in => out1
+</Route>
+```
+where:
+```
+* C:\\Python36\\python.exe is your  path to your python installation
+* D:\\mst-sender\\test.log is your log file being monitored by nxlog
+* D:\\mst-sender\\sender.py is the path to `sender.py`
+```
+
+* Restart `nxlog` service
+
+# Linux (Ubuntu)
+* Download nxlog (download)[https://nxlog.co/products/nxlog-community-edition/download]
+* Transfer the file to the target server scp or a similar secure method 
+* Install nxlog packadges ie. `sudo dpkg -i nxlog-ce_2.10.2150_ubuntu_xenial_amd64.deb` [Installation](https://nxlog.co/documentation/nxlog-user-guide/deploy_debian.html)
+* Verify the installation works `nxlog -v`
+* Pull `sender.py` onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/sender.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender`
+* Pull the configuration file `mkdir /etc/mst-sender/` and `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.conf.sample -O /etc/mst-sender/mst-sender.conf`
+* Edit `nxlog.conf` in `/etc/nxlog`
+
+```bash
+<Extension _exec>
+    Module  xm_exec
+</Extension>
+
+<Input in>
+    Module  im_file
+    File    "D:\\mst-sender\\test.log"
+        <Exec>
+        if $raw_event =~ /(\S+)\ (.+) \[ERROR (.+)/
+        {
+            exec_async("/usr/bin/python", "/usr/local/bin/mst-sender", "--log_level", "ERROR", "--message", $raw_event);
+        }
+        if $raw_event =~ /(\S+)\ (.+) \[WARNING (.+)/
+        {
+            exec_async("/usr/bin/python", "/usr/local/bin/mst-sender", "--log_level", "WARNING", "--message", $raw_event);
+        }
+        </Exec>
+</Input>
+
+<Output out1>
+    Module  om_null
+</Output>
+
+<Route 1>
+    Path    in => out1
+</Route>
+```
 
 #### nxlog config file 
 

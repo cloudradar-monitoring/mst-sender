@@ -9,7 +9,7 @@ import requests
 
 def push_msg(args):
 
-    with open("webhookurl.conf", "r") as fh:
+    with open("mst-sender.conf", "r") as fh:
         webhook_url = fh.read()
 
     print("webhook_url: " + webhook_url)
