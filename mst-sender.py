@@ -7,14 +7,58 @@ from datetime import datetime
 import requests
 import os
 from ConfigParser import SafeConfigParser
+import logging
+import logging.config
+
+CWD = os.path.dirname(os.path.realpath(__file__))
+
+LOGGING_CONFIG = {
+    'formatters': {
+        'brief': {
+            'format': '[%(asctime)s][%(levelname)s] %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'brief'
+        },
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(CWD, "mst-sender.log"),
+            'formatter': 'brief',
+            'mode': 'a',
+            'maxBytes': 1048576,
+            'backupCount': 10
+        },
+    },
+    'loggers': {
+        'main': {
+            'propagate': False,
+            'handlers': ['console', 'file'],
+            'level': 'INFO'
+        }
+    },
+    'version': 1
+}
 
 
 def push_msg(args):
 
     parser = SafeConfigParser()
+    conf_file = os.path.join(CWD, "mst-sender.cfg")
 
-    with open(os.path.join(os.getcwd(), "mst-sender.cfg"), "r") as fh:
+    with open(conf_file, "r") as fh:
         parser.readfp(fh)
+
+    try:
+        LOGGING_CONFIG['handlers']['file']['filename'] = os.path.join(parser.get(args.profile, 'logs'), 'mst-sender.log')
+    except:
+        pass
+
+    logging.config.dictConfig(LOGGING_CONFIG)
+    logger = logging.getLogger('main')
 
     args.webhook_url = parser.get(args.profile, 'webhook_url')
 
@@ -70,10 +114,11 @@ def push_msg(args):
     ]
     }
 
-    print(args)
+    logger.info(args)
+    logger.info(json_payload)
 
     r = requests.post(url=args.webhook_url, json=json_payload)
-    print(r.status_code)
+    logger.info(r.status_code)
 
 
 if __name__ == "__main__":
@@ -84,7 +129,5 @@ if __name__ == "__main__":
     parser.add_argument('--sender', action="store", dest="sender")
     parser.add_argument('--message', action="store", dest="message")
     parser.add_argument('--title', action="store", dest="title", default="nxlog notification")
-
-    print(parser.parse_args())
 
     push_msg(parser.parse_args())

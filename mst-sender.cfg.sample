@@ -12,7 +12,8 @@ fact.Env = Production
 
 [sample]
 webhook_url = web hook url (required)
-log_level = ERROR, WARNING or INFO (required, can be overridden by --log_level)
-sender = My tiny Webserver (optional, can be overridden by --sender, hostname is used as fallback)
+log_level = ERROR (required, can be overridden by --log_level)
+sender = My tiny Webserver (optional, can be overridden by --sender, hostname is used as a fallback)
 fact.Env = Staging (optional)
 fact.Project = Project Name
+logs = D:\mst-sender\logs (optional, the current script directory and \logs used as a fallback)
