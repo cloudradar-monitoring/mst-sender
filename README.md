@@ -17,7 +17,8 @@ logs = D:\mst-sender\logs (ms-sender.py log directory; optional, the current scr
 * `--sender`  - notification sender 
 * `--message` - a message which is posted to MS Teams
 * `--title`   - a card message title 
-
+* `--log_level` - a notification log level (INFO, ERROR, WARNING)
+* `--config` - a path to `mst-sender.cfg` (default: a current working directory of the script)
 
 # nxlog 
 #### Windows 
@@ -61,7 +62,7 @@ where:
 ```
 * C:\\Python27\\python.exe - path to your python installation
 * D:\\mst-sender\\test\\test.log - log file being monitored by nxlog
-* D:\\mst-sender\\mst-sender.py - path to `sender.py`
+* D:\\mst-sender\\mst-sender.py - path to sender.py
 ```
 
 * Restart `nxlog` service
@@ -73,7 +74,7 @@ where:
 * Transfer the file to the target server scp or a similar secure method 
 * Install nxlog packadges ie. `sudo dpkg -i nxlog-ce_2.10.2150_ubuntu_xenial_amd64.deb` [nxlog installation manual](https://nxlog.co/documentation/nxlog-user-guide/deploy_debian.html)
 * Verify the installation works `nxlog -v`
-* Pull `sender.py` onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender`
+* Pull `ms-sender.py` onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender`
 * Pull the configuration file onto the server `mkdir /etc/mst-sender/` and then `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.cfg.sample -O /etc/mst-sender/mst-sender.cfg`
 * Paste your MS Teams Web Hook Url into `/mst-sender.cfg`
 * Pull the test log file onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/sample/test.log -O /etc/mst-sender/test.log`
@@ -90,11 +91,11 @@ where:
         <Exec>
         if $raw_event =~ /(\S+)\ (.+) \[ERROR (.+)/
         {
-            exec_async("/usr/bin/python", "/usr/local/bin/mst-sender", "--log_level", "ERROR", "--message", $raw_event);
+            exec_async("/usr/bin/python", "/usr/local/bin/mst-sender", "--log_level", "ERROR", "--message", $raw_event, "--config", "/etc/mst-sender/");
         }
         if $raw_event =~ /(\S+)\ (.+) \[WARNING (.+)/
         {
-            exec_async("/usr/bin/python", "/usr/local/bin/mst-sender", "--log_level", "WARNING", "--message", $raw_event);
+            exec_async("/usr/bin/python", "/usr/local/bin/mst-sender", "--log_level", "WARNING", "--message", $raw_event, "--config", "/etc/mst-sender/");
         }
         </Exec>
 </Input>

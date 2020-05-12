@@ -47,7 +47,11 @@ LOGGING_CONFIG = {
 def push_msg(args):
 
     parser = SafeConfigParser()
-    conf_file = os.path.join(CWD, "mst-sender.cfg")
+
+    if args.config == "CWD":
+        conf_file = os.path.join(CWD, "mst-sender.cfg")
+    else:
+        conf_file = os.path.join(args.config, "mst-sender.cfg")
 
     with open(conf_file, "r") as fh:
         parser.readfp(fh)
@@ -129,5 +133,6 @@ if __name__ == "__main__":
     parser.add_argument('--sender', action="store", dest="sender")
     parser.add_argument('--message', action="store", dest="message")
     parser.add_argument('--title', action="store", dest="title", default="nxlog notification")
+    parser.add_argument('--config', action="store", dest="config", default="CWD")
 
     push_msg(parser.parse_args())
