@@ -9,7 +9,6 @@ log_level = ERROR (required, can be overridden by --log_level)
 sender = My tiny Webserver (optional, can be overridden by --sender, hostname is used as a fallback)
 fact.Env = Staging (optional)
 fact.Project = Project Name (optional)
-logs = D:\mst-sender\logs (ms-sender.py log directory; optional, the current script directory used as a fallback)
 ```
 
 #### ms-sender.py command line arguments:
@@ -20,6 +19,9 @@ logs = D:\mst-sender\logs (ms-sender.py log directory; optional, the current scr
 * `--log_level` - a notification log level (INFO, ERROR, WARNING)
 * `--config` - a path to `mst-sender.cfg` (default: a current working directory of the script)
 
+Example:
+`python /usr/local/bin/mst-sender --log_level ERROR --message "Test from ubunt" --profile production --config /etc/mst-sender`
+
 # nxlog 
 #### Windows 
 
@@ -27,7 +29,7 @@ logs = D:\mst-sender\logs (ms-sender.py log directory; optional, the current scr
 * Have a Python installed (v2.7)
 * Clone this repo or download `mst-sender.py` along with `mst-sender.cfg.sample` which are used to push notification to MS Teams
 * Rename `mst-sender.cfg.sample` to `mst-sender.cfg` and paste your MS Teams Web Hook Url in it
-* Edit your nxlog configuration file found in `C:\Program Files (x86)\nxlog\conf` (or `C:\Program Files\nxlog\conf`) and add the following code:
+* Edit your nxlog configuration file found in `C:\Program Files (x86)\nxlog\conf` (or `C:\Program Files\nxlog\conf`) and add the following code (assuming --profile is `default`):
 
 
 ```bash
@@ -76,7 +78,8 @@ where:
 * Verify the installation works `nxlog -v`
 * Pull `ms-sender.py` onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender`
 * Pull the configuration file onto the server `mkdir /etc/mst-sender/` and then `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.cfg.sample -O /etc/mst-sender/mst-sender.cfg`
-* Paste your MS Teams Web Hook Url into `/mst-sender.cfg`
+* Paste your MS Teams Web Hook Url into `/mst-sender.cfg` in `production` section. We'll use the `production` profile to test.
+* Test the sender by `python /usr/local/bin/mst-sender --message "Test from ubunt" --profile production --config /etc/mst-sender`. A notification should be received in your MS Teams.
 * Pull the test log file onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/sample/test.log -O /etc/mst-sender/test.log`
 * Edit `nxlog.conf` in `/etc/nxlog`
 
@@ -91,11 +94,11 @@ where:
         <Exec>
         if $raw_event =~ /(\S+)\ (.+) \[ERROR (.+)/
         {
-            exec_async("/usr/bin/python", "/usr/local/bin/mst-sender", "--log_level", "ERROR", "--message", $raw_event, "--config", "/etc/mst-sender/");
+            exec_async("/usr/bin/python", "/usr/local/bin/mst-sender", "--log_level", "ERROR", "--message", $raw_event, "--config", "/etc/mst-sender/", "--profile", "production");
         }
         if $raw_event =~ /(\S+)\ (.+) \[WARNING (.+)/
         {
-            exec_async("/usr/bin/python", "/usr/local/bin/mst-sender", "--log_level", "WARNING", "--message", $raw_event, "--config", "/etc/mst-sender/");
+            exec_async("/usr/bin/python", "/usr/local/bin/mst-sender", "--log_level", "WARNING", "--message", $raw_event, "--config", "/etc/mst-sender/", "--profile", "production");
         }
         </Exec>
 </Input>
