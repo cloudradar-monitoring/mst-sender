@@ -113,4 +113,9 @@ where:
 ```
 
 * restart nxlog `sudo systemctl restart nxlog`
-* Verify if it works; add a couple of ERROR, WARNING lines in `test.log`. You should get notifications in MS Teams
+* Verify if it works; append a couple of ERROR, WARNING lines in `test.log`. You should get notifications in MS Teams ie.
+<br>
+`echo "01/May/2020:20:55:33 +0000 [WARNING 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 2 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96" >> test.log`
+<br>
+`echo "01/May/2020:20:55:33 +0000 [ERROR 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 2 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96" >> test.log`
+
