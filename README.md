@@ -78,7 +78,7 @@ where:
 * Verify the installation works `nxlog -v`
 * Pull `ms-sender.py` onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender`
 * Pull the configuration file onto the server `mkdir /etc/mst-sender/` and then `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.cfg.sample -O /etc/mst-sender/mst-sender.cfg`
-* Paste your MS Teams Web Hook Url into `/mst-sender.cfg` in `production` section. We'll use the `production` profile to test.
+* Enter your MS Teams Web Hook Url into `/mst-sender.cfg` in the `production` section. We'll use the `production` profile to test.
 * Test the sender by `python /usr/local/bin/mst-sender --message "Test from ubunt" --profile production --config /etc/mst-sender`. A notification should be received in your MS Teams.
 * Pull the test log file onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/sample/test.log -O /etc/mst-sender/test.log`
 * Edit `nxlog.conf` in `/etc/nxlog`
@@ -114,8 +114,8 @@ where:
 
 * restart nxlog `sudo systemctl restart nxlog`
 * Verify if it works; append a couple of ERROR, WARNING lines in `test.log`. You should get notifications in MS Teams ie.
-<br>
-`echo "01/May/2020:20:55:33 +0000 [WARNING 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 2 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96" >> test.log`
-<br>
-`echo "01/May/2020:20:55:33 +0000 [ERROR 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 2 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96" >> test.log`
+```
+echo "01/May/2020:20:55:33 +0000 [WARNING 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 2 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96" >> test.log
+echo "01/May/2020:20:55:33 +0000 [ERROR 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 2 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96" >> test.log
+```
 
