@@ -51,27 +51,33 @@ fact.Env = Staging (optional)
 fact.Project = Project Name (optional)
 ```
 
-#### mst-sender.py command line arguments:
-* `--profile` - profile used in `mst-sender.cfg`
+#### Command line options:
+* `--profile` - profile used in `mst-sender.cfg` ie `--profile production`
 * `--sender`  - notification sender 
-* `--message` - a message which is posted to MS Teams
-* `--title`   - a card message title 
-* `--severity` - a notification log level (INFO, ERROR, WARNING)
-* `--config` - a path to `mst-sender.cfg` (default: a current working directory of the script)
+* `--message` - message which is posted to MS Teams
+* `--title`   - card message title 
+* `--severity` - notification severity (INFO, ERROR, WARNING)
+* `--config` - directory where `mst-sender.cfg` sits (a current working directory of the script used as a fallback)
 
-Example:
-`python /usr/local/bin/mst-sender --severity ERROR --message "Test from ubunt" --profile production --config /etc/mst-sender`
+Examples:
+
+```
+# Send a test message with a severity of ERROR using [production] profile from mst-sender.cfg
+python /usr/local/bin/mst-sender --severity ERROR --message "Test from ubuntu" --profile production --config /etc/mst-sender
+# Send a test message with a severity of INFO using [default] profile from mst-sender.cfg
+python /usr/local/bin/mst-sender --severity INFO --message "Test from ubunt" --config /etc/mst-sender
+# Send a test message with a severity of WARNING using [default] profile from mst-sender.cfg
+# as a message sender Developer is used; the card title reads I AM A NEW TITLE
+python3 C:\\mst-sender\\mst-sender3.py --severity WARNING --message "Test from Windows - Python3" --config C:\\mst-sender --sender Developer --title "I AM A NEW TITLE"
+```
 
 # Integrate mst-sender with NX Log
  
 #### Windows 
 
+* Install and configure `mst-sender` (see above for instruction)
 * Download and install nxlog-ce (or Enterprise edition) [download](https://nxlog.co/products/nxlog-community-edition/download)
-* Have a Python installed (v2.7)
-* Clone this repo or download `mst-sender.py` along with `mst-sender.cfg.sample` which are used to push notification to MS Teams
-* Rename `mst-sender.cfg.sample` to `mst-sender.cfg` and paste your MS Teams Web Hook Url in it
-* Edit your nxlog configuration file found in `C:\Program Files (x86)\nxlog\conf` (or `C:\Program Files\nxlog\conf`) and add the following code (assuming --profile is `default`):
-* Enter your MS Teams Web Hook Url into `mst-sender.cfg` into the appropriate section ie. `[production]`. We'll use the `production` profile to test.
+* Edit your nxlog configuration file found in `C:\Program Files (x86)\nxlog\conf` (or `C:\Program Files\nxlog\conf`) and add the following code (assuming --profile is `[default]`):
 
 ```bash
 <Extension _exec>
@@ -103,7 +109,7 @@ Example:
 ```
 where:
 ```
-* C:\\Python27\\python.exe - path to your python installation
+* C:\\Python27\\python.exe (C:\\Python36\\python.exe) - path to your python installation
 * D:\\mst-sender\\test\\test.log - log file being monitored by nxlog
 * D:\\mst-sender\\mst-sender.py - path to sender.py
 ```
@@ -112,7 +118,7 @@ where:
 * Verify if it works; add a couple of ERROR, WARNING lines in `test.log`. You should get notifications in MS Teams
 
 #### Linux (Ubuntu)
-* Install python requests `sudo apt-get install -y python-requests.`
+* Install and configure `mst-sender` (see above for instruction)
 * Download nxlog (download)[https://nxlog.co/products/nxlog-community-edition/download]
 * Transfer the file to the target server scp or a similar secure method 
 * Install nxlog packadges ie. `sudo dpkg -i nxlog-ce_2.10.2150_ubuntu_xenial_amd64.deb` [nxlog installation manual](https://nxlog.co/documentation/nxlog-user-guide/deploy_debian.html)
@@ -120,7 +126,6 @@ where:
 * Pull `mst-sender.py` onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender`
 * Pull the configuration file onto the server `mkdir /etc/mst-sender/` and then `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.cfg.sample -O /etc/mst-sender/mst-sender.cfg`
 * Enter your MS Teams Web Hook Url into `/mst-sender.cfg` into the appropriate section ie. `[production]`. We'll use the `production` profile to test.
-* Test the sender by `python /usr/local/bin/mst-sender --message "Test from ubunt" --profile production --config /etc/mst-sender`. A notification should be received in your MS Teams.
 * Pull the test log file onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/sample/test.log -O /etc/mst-sender/test.log`
 * Edit `nxlog.conf` in `/etc/nxlog`
 
