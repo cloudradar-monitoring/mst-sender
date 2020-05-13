@@ -15,7 +15,7 @@
 # Python 2.7
 python mst-sender.py --severity ERROR --message "Test from Windows" --profile production
 # Python 3+
-python mst-sender3.py --severity ERROR --message "Test from Windows" --profile production
+python3 mst-sender3.py --severity ERROR --message "Test from Windows" --profile production
 ```
 
 ##### Linux
@@ -35,7 +35,7 @@ wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/m
 # Python 2.7
 python /usr/local/bin/mst-sender --message "Test from Linux" --profile production --config /etc/mst-sender
 # Python 3
-python /usr/local/bin/mst-sender3 --message "Test from Linux" --profile production --config /etc/mst-sender
+python3 /usr/local/bin/mst-sender3 --message "Test from Linux" --profile production --config /etc/mst-sender
 ```
 
 #### General usage
