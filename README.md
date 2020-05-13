@@ -64,8 +64,10 @@ Examples:
 ```
 # Send a test message with a severity of ERROR using [production] profile from mst-sender.cfg
 python /usr/local/bin/mst-sender --severity ERROR --message "Test from ubuntu" --profile production --config /etc/mst-sender
+
 # Send a test message with a severity of INFO using [default] profile from mst-sender.cfg
 python /usr/local/bin/mst-sender --severity INFO --message "Test from ubunt" --config /etc/mst-sender
+
 # Send a test message with a severity of WARNING using [default] profile from mst-sender.cfg
 # as a message sender Developer is used; the card title reads I AM A NEW TITLE
 python3 C:\\mst-sender\\mst-sender3.py --severity WARNING --message "Test from Windows - Python3" --config C:\\mst-sender --sender Developer --title "I AM A NEW TITLE"
@@ -119,7 +121,7 @@ where:
 
 #### Linux (Ubuntu)
 * Install and configure `mst-sender` (see above for instruction)
-* Download nxlog (download)[https://nxlog.co/products/nxlog-community-edition/download]
+* Download nxlog [download](https://nxlog.co/products/nxlog-community-edition/download)
 * Transfer the file to the target server scp or a similar secure method 
 * Install nxlog packadges ie. `sudo dpkg -i nxlog-ce_2.10.2150_ubuntu_xenial_amd64.deb` [nxlog installation manual](https://nxlog.co/documentation/nxlog-user-guide/deploy_debian.html)
 * Verify the installation works `nxlog -v`
