@@ -1,28 +1,60 @@
-# ms-sender.py 
+# mst-sender.py 
 
-#### ms-sender.cfg
+
+#### How to create a Webhook url in MS Teams
+[Follow this instruction](https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/connectors-using#setting-up-a-custom-incoming-webhook)
+
+#### How to install
+##### Windows
+* Have a Python installed (v.2.7+) along with python requests
+* Download mst-sender python script along with mst-sender.cfg.sample
+* Rename `mst-sender.cfg.sample` to `mst-sender.cfg` and paste your MS Teams Web Hook Url into it
+* Send a test message 
+
+(Python 2.7) `python mst-sender.py --severity ERROR --message "Test from Windows" --profile production`
+<br>
+(Python 3+) `python mst-sender3.py --severity ERROR --message "Test from Windows" --profile production`
+
+##### Linux
+* Have a Python installed (v.2.7+)
+* Install python requests `sudo apt-get install -y python-requests`.
+* Pull ms-sender script onto the server 
+`wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender` for Python 2.7
+<br>
+`wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender3.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender` for Python 3
+* Pull the configuration file onto the server `mkdir /etc/mst-sender`/ and then `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.cfg.sample -O /etc/mst-sender/mst-sender.cfg`
+* Send a test message
+
+(Python 2.7) `python /usr/local/bin/mst-sender --message "Test from Linux" --profile production --config /etc/mst-sender`
+<br>
+(Python 3) `python /usr/local/bin/mst-sender3 --message "Test from Linux" --profile production --config /etc/mst-sender`
+
+#### General usage
+
+#### mst-sender.cfg
 
 ```bash
 [default]
 webhook_url = web hook url (required)
-log_level = ERROR (required, can be overridden by --log_level)
+severity = ERROR (required, can be overridden by --severity)
 sender = My tiny Webserver (optional, can be overridden by --sender, hostname is used as a fallback)
 fact.Env = Staging (optional)
 fact.Project = Project Name (optional)
 ```
 
-#### ms-sender.py command line arguments:
-* `--profile` - profile used in `ms-sender.cfg`
+#### mst-sender.py command line arguments:
+* `--profile` - profile used in `mst-sender.cfg`
 * `--sender`  - notification sender 
 * `--message` - a message which is posted to MS Teams
 * `--title`   - a card message title 
-* `--log_level` - a notification log level (INFO, ERROR, WARNING)
+* `--severity` - a notification log level (INFO, ERROR, WARNING)
 * `--config` - a path to `mst-sender.cfg` (default: a current working directory of the script)
 
 Example:
-`python /usr/local/bin/mst-sender --log_level ERROR --message "Test from ubunt" --profile production --config /etc/mst-sender`
+`python /usr/local/bin/mst-sender --severity ERROR --message "Test from ubunt" --profile production --config /etc/mst-sender`
 
-# nxlog 
+# Integrate mst-sender with NX Log
+ 
 #### Windows 
 
 * Download and install nxlog-ce (or Enterprise edition) [download](https://nxlog.co/products/nxlog-community-edition/download)
@@ -30,7 +62,7 @@ Example:
 * Clone this repo or download `mst-sender.py` along with `mst-sender.cfg.sample` which are used to push notification to MS Teams
 * Rename `mst-sender.cfg.sample` to `mst-sender.cfg` and paste your MS Teams Web Hook Url in it
 * Edit your nxlog configuration file found in `C:\Program Files (x86)\nxlog\conf` (or `C:\Program Files\nxlog\conf`) and add the following code (assuming --profile is `default`):
-
+* Enter your MS Teams Web Hook Url into `mst-sender.cfg` into the appropriate section ie. `[production]`. We'll use the `production` profile to test.
 
 ```bash
 <Extension _exec>
@@ -43,11 +75,11 @@ Example:
         <Exec>
         if $raw_event =~ /(\S+)\ (.+) \[ERROR (.+)/
         {
-            exec_async("C:\\Python27\\python.exe", "D:\\mst-sender\\mst-sender.py", "--log_level", "ERROR", "--message", $raw_event);
+            exec_async("C:\\Python27\\python.exe", "D:\\mst-sender\\mst-sender.py", "--severity", "ERROR", "--message", $raw_event);
         }
         if $raw_event =~ /(\S+)\ (.+) \[WARNING (.+)/
         {
-            exec_async("C:\\Python27\\python.exe", "D:\\mst-sender\\mst-sender.py", "--log_level", "WARNING", "--message", $raw_event);
+            exec_async("C:\\Python27\\python.exe", "D:\\mst-sender\\mst-sender.py", "--severity", "WARNING", "--message", $raw_event);
         }
         </Exec>
 </Input>
@@ -76,9 +108,9 @@ where:
 * Transfer the file to the target server scp or a similar secure method 
 * Install nxlog packadges ie. `sudo dpkg -i nxlog-ce_2.10.2150_ubuntu_xenial_amd64.deb` [nxlog installation manual](https://nxlog.co/documentation/nxlog-user-guide/deploy_debian.html)
 * Verify the installation works `nxlog -v`
-* Pull `ms-sender.py` onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender`
+* Pull `mst-sender.py` onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender`
 * Pull the configuration file onto the server `mkdir /etc/mst-sender/` and then `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.cfg.sample -O /etc/mst-sender/mst-sender.cfg`
-* Enter your MS Teams Web Hook Url into `/mst-sender.cfg` in the `production` section. We'll use the `production` profile to test.
+* Enter your MS Teams Web Hook Url into `/mst-sender.cfg` into the appropriate section ie. `[production]`. We'll use the `production` profile to test.
 * Test the sender by `python /usr/local/bin/mst-sender --message "Test from ubunt" --profile production --config /etc/mst-sender`. A notification should be received in your MS Teams.
 * Pull the test log file onto the server `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/sample/test.log -O /etc/mst-sender/test.log`
 * Edit `nxlog.conf` in `/etc/nxlog`
@@ -94,11 +126,11 @@ where:
         <Exec>
         if $raw_event =~ /(\S+)\ (.+) \[ERROR (.+)/
         {
-            exec_async("/usr/bin/python", "/usr/local/bin/mst-sender", "--log_level", "ERROR", "--message", $raw_event, "--config", "/etc/mst-sender/", "--profile", "production");
+            exec_async("/usr/bin/python", "/usr/local/bin/mst-sender", "--severity", "ERROR", "--message", $raw_event, "--config", "/etc/mst-sender/", "--profile", "production");
         }
         if $raw_event =~ /(\S+)\ (.+) \[WARNING (.+)/
         {
-            exec_async("/usr/bin/python", "/usr/local/bin/mst-sender", "--log_level", "WARNING", "--message", $raw_event, "--config", "/etc/mst-sender/", "--profile", "production");
+            exec_async("/usr/bin/python", "/usr/local/bin/mst-sender", "--severity", "WARNING", "--message", $raw_event, "--config", "/etc/mst-sender/", "--profile", "production");
         }
         </Exec>
 </Input>

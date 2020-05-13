@@ -1,18 +1,28 @@
+#  -----------------------------
+# Default configuration block. Mandatory. Always used if no profile is specified.
+# To use another profile use: --profile ie. --profile production
+#  -----------------------------
 [default]
-webhook_url = https://outlook.office.com/webhook/TOKEN
-log_level = ERROR
+# Enter your web hook url created on MS Teams
+webhook_url = https://outlook.office.com/webhook/<YOUR_TOKEN>
+
+# Specify a severity, can be overridden by '--severity'
+# The severity determines the color of the message.
+# ERROR, WARNING or INFO
+severity = ERROR
+
+# Optionally specify who should appear as sender.
+# If not given, the local hostname is used.
+# Can be overridden by --sender
+sender = My server
+
+# You can append any facts to the message. Optional.
+# Format fact.FACT_NAME ie. fact.Project Name = Your Project Name fact becomes 'Project Name: Your Project Name'
 fact.Env = Staging
-fact.Project = Project Name
+fact.Project Name = Your Project Name
 
 [production]
-webhook_url =
-log_level = ERROR
+webhook_url = https://outlook.office.com/webhook/<YOUR_TOKEN>
+severity = ERROR
 sender = My tiny Webserver
 fact.Env = Production
-
-[sample]
-webhook_url = web hook url (required)
-log_level = ERROR, WARNING or INFO (required, can be overridden by --log_level)
-sender = My tiny Webserver (optional, can be overridden by --sender, hostname is used as a fallback)
-fact.Env = Staging (optional)
-fact.Project = Project Name
