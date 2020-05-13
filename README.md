@@ -1,5 +1,16 @@
 # mst-sender.py 
 
+#### What is it for 
+
+The script sends a notification message in form of a MS Teams Message Card.
+<br>
+It could be also easily integrated with [nxlog](https://nxlog.co/). 
+<br>
+It works with Python 2.7+ `mst-sender.py`; for Python 3, `mst-sender3.py` should be used.
+
+Notification example received in MS Teams:
+
+![card-sample](https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/sample/card.png)
 
 #### How to create a Webhook url in MS Teams
 [Follow this instruction](https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/connectors-using#setting-up-a-custom-incoming-webhook)
