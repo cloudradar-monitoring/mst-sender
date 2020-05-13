@@ -11,24 +11,32 @@
 * Rename `mst-sender.cfg.sample` to `mst-sender.cfg` and paste your MS Teams Web Hook Url into it
 * Send a test message 
 
-(Python 2.7) `python mst-sender.py --severity ERROR --message "Test from Windows" --profile production`
-<br>
-(Python 3+) `python mst-sender3.py --severity ERROR --message "Test from Windows" --profile production`
+```
+# Python 2.7
+python mst-sender.py --severity ERROR --message "Test from Windows" --profile production
+# Python 3+
+python mst-sender3.py --severity ERROR --message "Test from Windows" --profile production
+```
 
 ##### Linux
 * Have a Python installed (v.2.7+)
 * Install python requests `sudo apt-get install -y python-requests`.
 * Pull ms-sender script onto the server 
-`wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender` for Python 2.7
-<br>
-`wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender3.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender` for Python 3
-
+```
+# Python 2.7
+wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender
+# Python 3
+wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender3.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender
+```
 * Pull the configuration file onto the server `mkdir /etc/mst-sender`/ and then `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.cfg.sample -O /etc/mst-sender/mst-sender.cfg`
 * Send a test message
 
-(Python 2.7) `python /usr/local/bin/mst-sender --message "Test from Linux" --profile production --config /etc/mst-sender`
-<br>
-(Python 3) `python /usr/local/bin/mst-sender3 --message "Test from Linux" --profile production --config /etc/mst-sender`
+```
+# Python 2.7
+python /usr/local/bin/mst-sender --message "Test from Linux" --profile production --config /etc/mst-sender
+# Python 3
+python /usr/local/bin/mst-sender3 --message "Test from Linux" --profile production --config /etc/mst-sender
+```
 
 #### General usage
 
