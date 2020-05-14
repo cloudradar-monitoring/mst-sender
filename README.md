@@ -18,7 +18,6 @@ Notification example received in MS Teams:
 
 #### How to install
 ##### Windows
-<<<<<<< HEAD
 * Have a Python installed with python [requests](https://requests.readthedocs.io/en/master/)
 * Download `mst-sender` python script along with `mst-sender.cfg`.sample
 * Rename `mst-sender.cfg.sample` to `mst-sender.cfg` and paste your MS Teams Web Hook Url into it
@@ -32,7 +31,6 @@ python3 mst-sender3.py --severity ERROR --message "Test from Windows" --profile 
 ```
 
 ##### Linux
-<<<<<<< HEAD
 * Have a Python installed
 * Install python [requests]([requests](https://requests.readthedocs.io/en/master/)) `sudo apt-get install -y python-requests`.
 * Pull ms-sender script onto the server 
