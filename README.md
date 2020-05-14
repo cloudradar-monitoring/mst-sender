@@ -1,12 +1,12 @@
 # mst-sender.py 
 
-#### What is it for 
+#### What it is for 
 
 The script sends a notification message in form of a MS Teams Message Card.
 <br>
 It could be also easily integrated with [nxlog](https://nxlog.co/). 
 <br>
-It works with Python 2.7+ `mst-sender.py`; for Python 3, `mst-sender3.py` should be used.
+It works with Python 2.7+ `mst-sender.py` and Python 3 `mst-sender3.py`
 
 Notification example received in MS Teams:
 
@@ -17,8 +17,8 @@ Notification example received in MS Teams:
 
 #### How to install
 ##### Windows
-* Have a Python installed (v.2.7+) along with python requests
-* Download mst-sender python script along with mst-sender.cfg.sample
+* Have a Python installed (v.2.7+) with python [requests](https://requests.readthedocs.io/en/master/)
+* Download `mst-sender` python script along with `mst-sender.cfg`.sample
 * Rename `mst-sender.cfg.sample` to `mst-sender.cfg` and paste your MS Teams Web Hook Url into it
 * Send a test message 
 
@@ -31,7 +31,7 @@ python3 mst-sender3.py --severity ERROR --message "Test from Windows" --profile 
 
 ##### Linux
 * Have a Python installed (v.2.7+)
-* Install python requests `sudo apt-get install -y python-requests`.
+* Install python [requests]([requests](https://requests.readthedocs.io/en/master/)) `sudo apt-get install -y python-requests`.
 * Pull ms-sender script onto the server 
 ```
 # Python 2.7
@@ -51,15 +51,27 @@ python3 /usr/local/bin/mst-sender3 --message "Test from Linux" --profile product
 
 #### General usage
 
-#### mst-sender.cfg
+#### Configuration - mst-sender.cfg
 
 ```bash
 [default]
-webhook_url = web hook url (required)
-severity = ERROR (required, can be overridden by --severity)
-sender = My tiny Webserver (optional, can be overridden by --sender, hostname is used as a fallback)
-fact.Env = Staging (optional)
-fact.Project = Project Name (optional)
+# Enter your web hook url created on MS Teams
+webhook_url = https://outlook.office.com/webhook/<YOUR_TOKEN>
+
+# Specify a severity, can be overridden by '--severity'
+# The severity determines the color of the message.
+# ERROR, WARNING or INFO
+severity = ERROR
+
+# Optionally specify who should appear as sender.
+# If not given, the local hostname is used.
+# Can be overridden by --sender
+sender = My server
+
+# You can append any facts to the message. Optional.
+# Format fact.FACT_NAME ie. fact.Project Name = Your Project Name fact becomes 'Project Name: Your Project Name'
+fact.Env = Staging
+fact.Project Name = Your Project Name
 ```
 
 #### Command line options:
