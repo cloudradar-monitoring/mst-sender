@@ -138,7 +138,7 @@ where:
 ```
 C:\\Python27\\python.exe (C:\\Python36\\python.exe) - path to your python installation
 D:\\mst-sender\\test\\test.log - log file being monitored by nxlog
-D:\\mst-sender\\mst-sender.py - path to sender.py
+D:\\mst-sender\\mst-sender.py - path to mst-sender.py ir mst-sender3.py
 ```
 
 * Restart `nxlog` service
