@@ -250,3 +250,44 @@ The output does more filtering discarding all messages not containing the keywor
 All matching is case sensitive. The `/i` modifier does case insensitive matching. For example `if not ($raw_event =~ /exception/i) drop();`
 
 ![card2-sample](https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/sample/card2.png)
+
+**Don't flood your chat with repeated messages.**
+Some errors in a very basic function can produce tons of log entries, sometimes thousands per second. This would flood your chat and the MS Teams API will very likely ban our rate limit you.
+NXlog can track repeated messages and suppress them by maintaining internal counters for each message. But as long as the message picked up from some log file contains a date and time, NXlog doesn't consider the messages as identical.
+So first you must remove the date, by creating a filter. Below is an example of how to cut off the date of an PHP Monolog message. The message typically starts with
+```
+[2020-06-30 10:40:07] hub.myproject.ERROR: Uncaught Exception TypeError: "Argument 1 passed to hub\Helpers\CK::hostData() must be of the type string, null given ...
+```
+In your nxlog config create a filter like this and put it into the route. Adjust the regex to your needs. 
+``` 
+<Processor removeDate>
+    Module pm_null
+    <Exec>
+        if ($raw_event =~ /\[.*?\] (.*)/) $raw_event = $1;
+    </Exec>
+</Processor>
+<Route myLogging>
+    Path applog,serverlog => removeDate => msteams
+</Route>
+```
+With this in place, the date is removed. Don't worry, the `mst-sender` script adds the date as a fact again. 
+
+Now create a counter and dop repeated messages.
+``` 
+<Processor norepeat>
+  Module pm_null
+  <Exec>
+  if defined get_stat($raw_event) {
+    add_stat($raw_event, 1);
+  } 
+  else {
+    create_stat($raw_event, 'COUNT', 10, now(), 10);
+  }
+  if get_stat($raw_event) > 2 drop();
+  </Exec>
+</Processor>
+<Route myLogging>
+    Path applog,serverlog => removeDate => norepeat => msteams
+</Route>
+```
+This example creates a counter with a lifetime of 10 seconds, increments it by one for every repeated messages, and drops messages after the third repetition. [Learn more about counters](https://nxlog.co/documentation/nxlog-user-guide-full#core_proc_create_stat) or [Download the full example](./sample/nxlog_om_exec.conf)
