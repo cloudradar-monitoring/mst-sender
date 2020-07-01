@@ -1,22 +1,22 @@
-# mst-sender.py 
+## mst-sender.py 
 
-#### What it is for 
+### What it is for 
 
 The script sends a notification message in form of a MS Teams Message Card.
 <br>
 It could be also easily integrated with [nxlog](https://nxlog.co/). 
 <br>
 
-It works with Python 2.7 `mst-sender.py` and Python 3.x `mst-sender3.py`.
+_It works with Python 3 only._
 
 Notification example received in MS Teams with the `INFO` severity:
 
 ![card-sample](https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/sample/card.png)
 
-#### How to create a Webhook url in MS Teams
+### How to create a Webhook url in MS Teams
 [Follow this instruction](https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/connectors-using#setting-up-a-custom-incoming-webhook)
 
-#### How to install
+### How to install
 ##### Windows
 * Have a Python installed with python [requests](https://requests.readthedocs.io/en/master/)
 * Download `mst-sender` python script along with `mst-sender.cfg.sample`
@@ -24,10 +24,7 @@ Notification example received in MS Teams with the `INFO` severity:
 * Send a test message 
 
 ```
-# Python 2.7
-python mst-sender.py --severity ERROR --message "Test from Windows" --profile production
-# Python 3.x
-python3 mst-sender3.py --severity ERROR --message "Test from Windows" --profile production
+python3 mst-sender.py --severity ERROR --message "Test from Windows" --profile production
 ```
 
 ##### Linux
@@ -35,23 +32,24 @@ python3 mst-sender3.py --severity ERROR --message "Test from Windows" --profile 
 * Install python [requests]([requests](https://requests.readthedocs.io/en/master/)) `sudo apt-get install -y python-requests`.
 * Pull ms-sender script onto the server 
 ```
-# Python 2.7
-wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender
-# Python 3.x
-wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender3.py -O /usr/local/bin/mst-sender && chmod +x /usr/local/bin/mst-sender
+wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.py \
+  -O /usr/local/bin/mst-sender \
+  && chmod +x /usr/local/bin/mst-sender
 ```
-* Pull the configuration file onto the server `mkdir /etc/mst-sender`/ and then `wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.cfg.sample -O /etc/mst-sender/mst-sender.cfg`
+* Pull the configuration file onto the server 
+```
+mkdir /etc/mst-sender
+wget https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/mst-sender.cfg.sample \ 
+-O /etc/mst-sender/mst-sender.cfg
+```
 * Enter your MS Teams Web Hook Url in `mst-sender.cfg` as `webhook_url = ` in the `[production]` profile. 
 * Send a test message
 
 ```
-# Python 2.7
-python /usr/local/bin/mst-sender --message "Test from Linux" --profile production --config /etc/mst-sender
-# Python 3.x
-python3 /usr/local/bin/mst-sender3 --message "Test from Linux" --profile production --config /etc/mst-sender
+/usr/local/bin/mst-sender3 --message "Test from Linux" --profile production
 ```
 
-#### General usage
+### General usage
 
 #### Configuration - mst-sender.cfg
 
@@ -95,10 +93,25 @@ python /usr/local/bin/mst-sender --severity INFO --message "Test from ubunt" --c
 
 # Send a test message with a severity of WARNING using [default] profile from mst-sender.cfg
 # as a message sender Developer is used; the card title reads I AM A NEW TITLE
-python3 C:\\mst-sender\\mst-sender3.py --severity WARNING --message "Test from Windows - Python3" --config C:\\mst-sender --sender Developer --title "I AM A NEW TITLE"
+python3 C:\\mst-sender\\mst-sender.py --severity WARNING --message "Test from Windows - Python3" --config C:\\mst-sender --sender Developer --title "I AM A NEW TITLE"
 ```
 
-# Integrate mst-sender with NX Log
+#### Reading from pipes
+`mst-sender` also supports reading the message from stdin, if no message is given by `--message`. Specifying options while reading from stdin is supported. 
+```bash
+echo "This is my message"|mst-sender
+echo "This is my message"|mst-sender --severity ERROR --profile example
+```
+One additional fact can be injected via the message itself by using square brackets and an equal sign. It's removed from the message and appended to the existing facts.
+```bash
+echo "[Logile=/tmp/app.log]An error occured in your app"|mst-sender
+```
+This creates the following fact
+```json
+{ "name": "Logfile", "value": "/tmp/app.log" }
+``` 
+
+## Integrate mst-sender with NX Log
  
 #### Windows 
 
@@ -117,11 +130,11 @@ python3 C:\\mst-sender\\mst-sender3.py --severity WARNING --message "Test from W
         <Exec>
         if $raw_event =~ /(\S+)\ (.+) \[ERROR (.+)/
         {
-            exec_async("C:\\Python27\\python.exe", "D:\\mst-sender\\mst-sender.py", "--severity", "ERROR", "--message", $raw_event);
+            exec_async("C:\\Python3\\python.exe", "D:\\mst-sender\\mst-sender.py", "--severity", "ERROR", "--message", $raw_event);
         }
         if $raw_event =~ /(\S+)\ (.+) \[WARNING (.+)/
         {
-            exec_async("C:\\Python27\\python.exe", "D:\\mst-sender\\mst-sender.py", "--severity", "WARNING", "--message", $raw_event);
+            exec_async("C:\\Python3\\python.exe", "D:\\mst-sender\\mst-sender.py", "--severity", "WARNING", "--message", $raw_event);
         }
         </Exec>
 </Input>
@@ -136,9 +149,8 @@ python3 C:\\mst-sender\\mst-sender3.py --severity WARNING --message "Test from W
 ```
 where:
 ```
-C:\\Python27\\python.exe (C:\\Python36\\python.exe) - path to your python installation
+C:\\Python3\\python.exe (C:\\Python36\\python.exe) - path to your python3 installation
 D:\\mst-sender\\test\\test.log - log file being monitored by nxlog
-D:\\mst-sender\\mst-sender.py - path to mst-sender.py or mst-sender3.py
 ```
 
 * Restart `nxlog` service
@@ -188,4 +200,53 @@ D:\\mst-sender\\mst-sender.py - path to mst-sender.py or mst-sender3.py
 echo "01/May/2020:20:55:33 +0000 [WARNING 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 2 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96" >> test.log
 echo "01/May/2020:20:55:33 +0000 [ERROR 0 /hub.cloudradar.php] PHP message: PHP Notice:  Indirect 2 modification of overloaded element of Silex\Application has no effect in /var/www/hub/src/app.php on line 96" >> test.log
 ```
+#### Advanced integration into Nxlog
+The above examples are simple and not suitable if you want to monitor many files. You would end up with a lot of duplicated configuration blocks.
+Instead of putting everything inside an Input Block you should define mst-sender as an output channel. For example
+``` 
+<Output msteams>
+    Module om_exec
+    Command /user/local/bin/mst-sender
+    Arg --title
+    Arg My awesome log monitoring
+    Exec    if not ($raw_event =~ /error/) drop();
+</Output>
+```
+This allows you to use the "msteams output" for many logfile you supervise. Here is a full example.
+```
+<Output msteams>
+    Module om_exec
+    Command /usr/local/bin/mst-sender
+    Arg --title
+    Arg My awesome log monitoring
+    Exec    if not ($raw_event =~ /error/) drop();
+</Output>
 
+<Input applog>
+    Module im_file
+    File "/tmp/app.log"
+    <Exec>
+      $raw_event = "[File=/tmp/app.log]" + $raw_event;
+    </Exec>
+</Input>
+<Input serverlog>
+    Module im_file
+    File "/tmp/server.log"
+    <Exec>
+       if not ($raw_event =~ /Exception/) drop();
+       $raw_event = "[File=/tmp/server.log]" + $raw_event;
+    </Exec>
+</Input>
+<Route myLogging>
+    Path applog,serverlog => msteams
+</Route>
+```
+This example defines two files supervised by NXlog. The route defines that messages from both are sent to msteams.
+Note that filtering is done at two levels. NXlog takes every new entry from the `/tmp/app.log` file and sends it to the msteams output.
+From the `/tmp/server.log` only entries containing the keyword `exception` are forwarded to the msteams output. 
+
+The output does more filtering discarding all messages not containing the keyword `error`. 
+
+All matching is case sensitive. The `/i` modifier does case insensitive matching. For example `if not ($raw_event =~ /exception/i) drop();`
+
+![card2-sample](https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/sample/card2.png)

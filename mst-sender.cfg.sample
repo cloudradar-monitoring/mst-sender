@@ -4,6 +4,7 @@
 #  -----------------------------
 [default]
 # Enter your web hook url created on MS Teams
+# Supports local file for testing, example:  webhook_url = file:///tmp/my-file.txt
 webhook_url = https://outlook.office.com/webhook/<YOUR_TOKEN>
 
 # Specify a severity, can be overridden by '--severity'
