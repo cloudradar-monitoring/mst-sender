@@ -202,7 +202,7 @@ echo "01/May/2020:20:55:33 +0000 [ERROR 0 /hub.cloudradar.php] PHP message: PHP 
 ```
 #### Advanced integration into Nxlog
 The above examples are simple and not suitable if you want to monitor many files. You would end up with a lot of duplicated configuration blocks.
-Instead of putting everything inside an Input Block you should define mst-sender as an output channel. For example
+Instead of putting everything inside Input Blocks you should define mst-sender as an output channel. For example
 ``` 
 <Output msteams>
     Module om_exec
@@ -212,7 +212,7 @@ Instead of putting everything inside an Input Block you should define mst-sender
     Exec    if not ($raw_event =~ /error/) drop();
 </Output>
 ```
-This allows you to use the "msteams output" for many logfile you supervise. Here is a full example.
+This allows you to use the "msteams output" for many log files you supervise. The route puts the pieces together. Here is a full example.
 ```
 <Output msteams>
     Module om_exec
@@ -245,13 +245,14 @@ This example defines two files supervised by NXlog. The route defines that messa
 Note that filtering is done at two levels. NXlog takes every new entry from the `/tmp/app.log` file and sends it to the msteams output.
 From the `/tmp/server.log` only entries containing the keyword `exception` are forwarded to the msteams output. 
 
-The output does more filtering discarding all messages not containing the keyword `error`. 
+The output module "msteams" does more filtering discarding all messages not containing the keyword `error`. 
 
 All matching is case sensitive. The `/i` modifier does case insensitive matching. For example `if not ($raw_event =~ /exception/i) drop();`
 
 ![card2-sample](./sample/card2.png)
 
 **Don't flood your chat with repeated messages.**
+
 Some errors in a very basic function can produce tons of log entries, sometimes thousands per second. This would flood your chat and the MS Teams API will very likely ban our rate limit you.
 NXlog can track repeated messages and suppress them by maintaining internal counters for each message. But as long as the message picked up from some log file contains a date and time, NXlog doesn't consider the messages as identical.
 So first you must remove the date, by creating a filter. Below is an example of how to cut off the date of an PHP Monolog message. The message typically starts with
@@ -290,4 +291,4 @@ Now create a counter and dop repeated messages.
     Path applog,serverlog => removeDate => norepeat => msteams
 </Route>
 ```
-This example creates a counter with a lifetime of 10 seconds, increments it by one for every repeated messages, and drops messages after the third repetition. [Learn more about counters](https://nxlog.co/documentation/nxlog-user-guide-full#core_proc_create_stat) or [Download the full example](./sample/nxlog_om_exec.conf)
+This example creates a counter with a lifetime of 10 seconds, increments it by one for every repeated message, and drops messages after the third repetition. [Learn more about counters](https://nxlog.co/documentation/nxlog-user-guide-full#core_proc_create_stat) or [Download the full example](./sample/nxlog_om_exec.conf)
