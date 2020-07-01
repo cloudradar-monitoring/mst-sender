@@ -11,7 +11,7 @@ _It works with Python 3 only._
 
 Notification example received in MS Teams with the `INFO` severity:
 
-![card-sample](https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/sample/card.png)
+![card-sample](./sample/card.png)
 
 ### How to create a Webhook url in MS Teams
 [Follow this instruction](https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/connectors-using#setting-up-a-custom-incoming-webhook)
@@ -249,7 +249,7 @@ The output does more filtering discarding all messages not containing the keywor
 
 All matching is case sensitive. The `/i` modifier does case insensitive matching. For example `if not ($raw_event =~ /exception/i) drop();`
 
-![card2-sample](https://raw.githubusercontent.com/cloudradar-monitoring/mst-sender/master/sample/card2.png)
+![card2-sample](./sample/card2.png)
 
 **Don't flood your chat with repeated messages.**
 Some errors in a very basic function can produce tons of log entries, sometimes thousands per second. This would flood your chat and the MS Teams API will very likely ban our rate limit you.
