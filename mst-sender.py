@@ -25,6 +25,7 @@ class MstSender:
     severity = ''
     debug = False
     message_facts_re = re.compile('\[(.*?)=(.*?)\]', re.IGNORECASE)
+    message_title_re = re.compile('\[Title=(.*?)\]', re.IGNORECASE)
 
     def __init__(self, args):
         self.config = args
@@ -97,9 +98,16 @@ class MstSender:
             "name": "Posted At:",
             "value": now.strftime("%d/%m/%Y %H:%M:%S") + " UTC"
         })
-        # Extract more facts from the message, because nxlog can ony inject a single line
-        msg_facts = re.search(self.message_facts_re, message)
+        # Extract the title from the message or fall back to the global settings
+        msg_title = re.search(self.message_title_re, message)
+        if msg_title is not None:
+            title = msg_title.group(1)
+            message = re.sub(self.message_title_re, '', message)
+        else:
+            title = self.title
 
+        # Extract one additional fact from the message
+        msg_facts = re.search(self.message_facts_re, message)
         if msg_facts is not None:
             __facts.append({
                 "name": msg_facts.group(1),
@@ -108,7 +116,7 @@ class MstSender:
             message = re.sub(self.message_facts_re, '', message)
         json_payload = {
             'text': self.severity,
-            'title': self.title,
+            'title': title,
             "themeColor": self.hex_colour,
             "sections": [
                 {
@@ -163,7 +171,4 @@ if __name__ == "__main__":
     # Keep the script running and wait for piped input.
     #
     for message in fileinput.input():
-        log = open('/tmp/pipeeater.log', 'a')
-        log.write('Eating from the pipe: ' + message)
-        log.close()
         dispatcher.dispatch(message)

@@ -102,11 +102,11 @@ python3 C:\\mst-sender\\mst-sender.py --severity WARNING --message "Test from Wi
 echo "This is my message"|mst-sender
 echo "This is my message"|mst-sender --severity ERROR --profile example
 ```
-One additional fact can be injected via the message itself by using square brackets and an equal sign. It's removed from the message and appended to the existing facts.
+The title and one additional fact can be injected via the message itself by using square brackets and an equal sign. It's removed from the message and appended to the existing facts.
 ```bash
-echo "[Logile=/tmp/app.log]An error occured in your app"|mst-sender
+echo "[Title=Some other title][Logfile=/tmp/app.log]An error occurred in your app"|mst-sender
 ```
-This creates the following fact
+This creates the following fact and overwrites the default title.
 ```json
 { "name": "Logfile", "value": "/tmp/app.log" }
 ``` 
@@ -291,4 +291,28 @@ Now create a counter and dop repeated messages.
     Path applog,serverlog => removeDate => norepeat => msteams
 </Route>
 ```
-This example creates a counter with a lifetime of 10 seconds, increments it by one for every repeated message, and drops messages after the third repetition. [Learn more about counters](https://nxlog.co/documentation/nxlog-user-guide-full#core_proc_create_stat) or [Download the full example](./sample/nxlog_om_exec.conf)
+This example creates a counter with a lifetime of 10 seconds, increments it by one for every repeated message, and drops messages after the third repetition. [Learn more about counters](https://nxlog.co/documentation/nxlog-user-guide-full#core_proc_create_stat) or [download the full example](./sample/nxlog_om_exec.conf).
+
+Using the Perl modulus operator, you can send the counter of repeated messages every X times. The modulus operator returns `0` if an integer is the exact multiple of another integer.
+```
+<Processor norepeat>
+  Module pm_null
+  <Exec>
+  if defined get_stat($raw_event) {
+    add_stat($raw_event, 1);
+  } 
+  else {
+    create_stat($raw_event, 'COUNT', 100, now(), 100);
+  }
+  if get_stat($raw_event)%10 == 0 {
+    $raw_event = $raw_event+ ' REPETITIONS=' + get_stat($raw_event);
+  } else {
+    if get_stat($raw_event) > 1 drop();
+  }
+  </Exec>
+</Processor>
+```
+This counter remains 100 seconds in the memory. After every ten repetitions of a message the message with a counter of repetitions is sent.
+
+### Limitations
+The om_exec mode of `mst-sender` is not working with Python 3.4 (tested on CentOS6). [Upgrading to Python 3.6 on CentOS](https://www.2daygeek.com/install-python-3-on-centos-6/) is relatively easy using  the Software Collections Repository (SCL). The internal behaviour of `fileinput.input()` is different. The buffer is released only on script termination and not after EOF of the piped input. 
